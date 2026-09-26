@@ -1,0 +1,42 @@
+{
+	"name": "ds_dim_flight_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_datalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DimFlight.csv",
+				"folderPath": "onprem",
+				"fileSystem": "bronze"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "flight_id",
+				"type": "String"
+			},
+			{
+				"name": "flight_number",
+				"type": "String"
+			},
+			{
+				"name": "departure_time",
+				"type": "String"
+			},
+			{
+				"name": "arrival_time",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

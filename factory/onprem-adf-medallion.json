@@ -1,0 +1,15 @@
+{
+	"name": "onprem-adf-medallion",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "francecentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f08491de-3772-484d-be5d-5f23e87ddd45",
+		"tenantId": "b0abd1ed-4966-4274-9f19-59dd663e81f5"
+	}
+}
