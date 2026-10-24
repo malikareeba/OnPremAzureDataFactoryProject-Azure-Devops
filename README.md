@@ -1,118 +1,137 @@
-# Airline Data Engineering Pipeline | Azure Data Factory & PySpark
+Got it! That clarifies the architecture. Your project was built primarily in Azure Data Factory, including the Silver and Gold transformation layers using ADF Mapping Data Flows, rather than using Databricks as a separate processing platform.
 
-An end-to-end Azure Data Engineering project demonstrating on-premises data migration, REST API ingestion, incremental data loading, data transformation, Medallion Architecture, dimensional modelling, and CI/CD workflows using Azure Data Factory and Azure DevOps.
+Here’s the final README, combining your project description and LinkedIn updates into one clean, copy-and-paste-ready GitHub Markdown file.
 
-The pipeline integrates airline, flight, passenger, airport, and booking data from multiple sources into Azure Data Lake Storage Gen2, transforming raw data into analytics-ready datasets for business reporting.
+# On-Premises to Azure Data Engineering Project | Azure Data Factory & Azure DevOps
+
+An end-to-end data engineering project that migrates, ingests, transforms, and models airline booking data using Azure Data Factory and Azure cloud services.
+
+The project demonstrates on-premises data migration, REST API ingestion, dynamic and parameterised pipelines, incremental data loading, Medallion Architecture, data orchestration, business data serving, and Git-based collaboration.
+
+The entire data pipeline is built around **Azure Data Factory**, using Mapping Data Flows to transform data from the Bronze Layer to the Silver Layer and to prepare business-ready data in the Gold Layer.
 
 ## Table of Contents
 
 - Project Overview
+- Project Objectives
 - Architecture
 - Technologies Used
 - Data Sources
 - Medallion Architecture
 - Data Model
 - Key Features
-- Pipeline Workflow
+- End-to-End Pipeline Workflow
 - Project Structure
 - Getting Started
-- Incremental Loading
-- Business Metrics
-- CI/CD and Version Control
-- Learning Outcomes
+- Incremental Data Loading
+- Business Metrics and SQL Queries
+- Git Integration and CI/CD Workflow
+- Challenges and Learning Outcomes
 - Future Improvements
 - Security Considerations
 - Author
 
 ## Project Overview
 
-The objective of this project is to build a scalable, automated data pipeline that consolidates airline booking data from on-premises files, a REST API, and Azure SQL Database into Azure Data Lake Storage Gen2.
+The objective of this project was to build an end-to-end Azure data engineering solution that consolidates airline data from multiple sources into a centralised Azure data lake.
 
-Azure Data Factory manages data ingestion and orchestration, while transformation processes prepare the data for downstream analytics. The Gold layer supports business analysis of ticket revenue, booking trends, airline performance, flight routes, and passenger behaviour.
+The pipeline integrates on-premises CSV files, airport reference data from a REST API, and transactional booking data from Azure SQL Database. Azure Data Factory orchestrates the ingestion, transformation, and serving processes to produce analytics-ready datasets.
 
-The project demonstrates the following data engineering concepts:
+The project follows the **Medallion Architecture**:
 
-- On-premises to cloud data migration.
-- Metadata-driven and parameterised ingestion pipelines.
-- REST API integration.
-- Full and incremental data loading.
-- Watermark-based change tracking.
-- Medallion Architecture: Bronze, Silver, and Gold.
-- Data cleansing, standardisation, and deduplication.
-- Star-schema dimensional modelling.
-- Pipeline orchestration, scheduling, and notifications.
-- Git-based collaboration and CI/CD practices.
+**Bronze → Silver → Gold**
+
+A key design decision was to use Azure Data Factory Mapping Data Flows for data transformation and serving instead of relying on Databricks as a separate transformation platform.
+
+This project brings together data ingestion, transformation, orchestration, incremental processing, and source control in a single end-to-end workflow.
+
+## Project Objectives
+
+- Migrate on-premises data into Azure.
+- Ingest reference data from a REST API.
+- Configure Azure SQL Database as a transactional data source.
+- Build reusable and dynamic Azure Data Factory pipelines.
+- Implement incremental loading using watermark logic.
+- Transform data through Bronze, Silver, and Gold layers.
+- Build separate Data Flow layers for transformation and data serving.
+- Orchestrate pipeline execution using Azure Data Factory.
+- Integrate Azure Logic Apps for pipeline notifications.
+- Configure triggers for automated execution.
+- Use Git integration, feature branches, and pull requests.
+- Apply version control and deployment workflow concepts using GitHub and Azure DevOps.
 
 ## Architecture
 
-The solution follows the Medallion Architecture pattern, separating raw ingestion, data transformation, and business-ready datasets.
+The project uses Azure Data Factory as the central orchestration and data integration service.
 
 ### High-Level Architecture
 
 ```
-                      DATA SOURCES
-                           |
-          +----------------+----------------+
-          |                |                |
-    On-Premises Files   REST API       Azure SQL DB
-        CSV Files        JSON            Bookings
-          |                |                |
-          +----------------+----------------+
-                           |
-                  Azure Data Factory
-               Ingestion & Orchestration
-                           |
-                           v
-                  BRONZE LAYER
-               Raw Data Ingestion
-              Azure Data Lake Gen2
-                           |
-                           v
-                  SILVER LAYER
-             Cleansing & Transformation
-                PySpark / Data Flows
-                  Delta Lake Format
-                           |
-                           v
-                   GOLD LAYER
-              Fact & Dimension Tables
-                 Business Views
-                           |
-                           v
-                Analytics & Reporting
+                     DATA SOURCES
+                          |
+          +---------------+---------------+
+          |               |               |
+     On-Prem Files     REST API      Azure SQL DB
+       CSV Files        JSON          FactBookings
+          |               |               |
+          +---------------+---------------+
+                          |
+                          v
+                 AZURE DATA FACTORY
+              Ingestion & Orchestration
+                          |
+                          v
+                   BRONZE LAYER
+                Raw Data in ADLS Gen2
+                          |
+                          v
+                   SILVER LAYER
+              ADF Mapping Data Flows
+             Data Transformation Layer
+                          |
+                          v
+                    GOLD LAYER
+              ADF Mapping Data Flows
+                Data Serving Layer
+                          |
+                          v
+               Business-Ready Datasets
+                Reporting & Analytics
 
-             Supporting Services
-        Azure Logic Apps | Key Vault
-        Triggers | Azure DevOps | GitHub
+             Supporting Components
+          Azure Logic Apps | Triggers
+          GitHub | Azure DevOps | Git
 ```
 
 ### Architecture Components
 
-1. **Source Layer:** On-premises CSV files, REST API JSON data, and transactional booking records from Azure SQL Database.
-2. **Bronze Layer:** Raw source data ingested into Azure Data Lake Storage Gen2.
-3. **Silver Layer:** Cleansed, standardised, deduplicated, and transformed datasets.
-4. **Gold Layer:** Analytics-ready fact and dimension tables supporting business reporting.
-5. **Orchestration Layer:** Azure Data Factory pipelines, triggers, and control-flow activities.
-6. **Monitoring and Notifications:** Azure Logic Apps for pipeline success and failure alerts.
-7. **Development and Deployment:** GitHub, Azure DevOps, feature branches, pull requests, and CI/CD workflows.
+1. **Source Systems:** On-premises CSV files, REST API JSON data, and booking transactions stored in Azure SQL Database.
+2. **Azure Data Factory:** Manages data movement, pipeline orchestration, parameters, dependencies, and execution.
+3. **Bronze Layer:** Stores ingested source data in Azure Data Lake Storage Gen2.
+4. **Silver Layer:** Uses Azure Data Factory Mapping Data Flows to transform and prepare Bronze data.
+5. **Gold Layer:** Uses a separate Data Flow layer to prepare business-ready datasets for reporting and analytics.
+6. **Azure Logic Apps:** Supports pipeline success and failure notifications.
+7. **Triggers:** Automates pipeline execution according to the configured trigger conditions.
+8. **Git Integration:** Supports source control, feature branches, pull requests, and deployment workflows.
 
 ## Technologies Used
 
-| Technology                            | Purpose                                                                 |
-| ------------------------------------- | ----------------------------------------------------------------------- |
-| Azure Data Factory                    | Data ingestion, pipeline orchestration, scheduling, and data movement   |
-| Azure Data Lake Storage Gen2          | Centralised storage for Bronze, Silver, and Gold datasets               |
-| Azure SQL Database                    | Source system for transactional booking data                            |
-| Azure Data Factory Mapping Data Flows | Data cleansing, transformations, joins, and derived columns             |
-| PySpark                               | Distributed data processing and transformation logic, where implemented |
-| Delta Lake                            | Reliable analytical storage and incremental processing                  |
-| Self-hosted Integration Runtime       | Connectivity to on-premises data sources                                |
-| Azure Integration Runtime             | Cloud-based data movement and connectivity                              |
-| Azure Logic Apps                      | Pipeline success and failure notifications                              |
-| Azure Key Vault                       | Secure storage of secrets and credentials                               |
-| Azure DevOps                          | Repository management and CI/CD workflows                               |
-| GitHub and Git                        | Source control, version history, and collaboration                      |
-| SQL, Python, JSON, CSV                | Data ingestion, transformation, and modelling                           |
+| Technology                            | Purpose                                                                    |
+| ------------------------------------- | -------------------------------------------------------------------------- |
+| Azure Data Factory                    | Data ingestion, orchestration, pipelines, triggers, and Mapping Data Flows |
+| Azure Data Lake Storage Gen2          | Storage for Bronze, Silver, and Gold datasets                              |
+| Azure SQL Database                    | Transactional booking data source                                          |
+| Azure Data Factory Mapping Data Flows | Visual data transformation, cleansing, joins, and data serving             |
+| Self-hosted Integration Runtime       | Connectivity to on-premises data sources                                   |
+| Azure Integration Runtime             | Cloud-based data movement and connectivity                                 |
+| REST API                              | Airport reference data ingestion                                           |
+| Azure Logic Apps                      | Pipeline success and failure notifications                                 |
+| GitHub                                | Source control and repository management                                   |
+| Azure DevOps                          | Development collaboration and deployment workflow                          |
+| Git                                   | Branching, commits, and version control                                    |
+| SQL, CSV, JSON                        | Source data, database operations, and data exchange                        |
+
+**Transformation approach:** The Silver and Gold layers are implemented using Azure Data Factory Mapping Data Flows. Databricks is not used as a separate transformation platform in this project.
 
 ## Data Sources
 
@@ -120,81 +139,86 @@ The pipeline integrates five logical datasets from three source types.
 
 | Dataset      | Format    | Source             | Ingestion Method             | Expected Records |
 | ------------ | --------- | ------------------ | ---------------------------- | ---------------- |
-| Airlines     | CSV       | On-premises        | ADF file ingestion           | 10               |
-| Flights      | CSV       | On-premises        | ADF file ingestion           | 10               |
-| Passengers   | CSV       | On-premises        | ADF file ingestion           | 10               |
-| Airports     | JSON      | REST API           | ADF API ingestion            | 10               |
+| Airlines     | CSV       | On-premises        | Azure Data Factory           | 10               |
+| Flights      | CSV       | On-premises        | Azure Data Factory           | 10               |
+| Passengers   | CSV       | On-premises        | Azure Data Factory           | 10               |
+| Airports     | JSON      | REST API           | API ingestion pipeline       | 10               |
 | FactBookings | SQL table | Azure SQL Database | Full and incremental loading | 1,000            |
 
-### Dataset at a Glance
+### Dataset Summary
 
-| Metric                   | Value                         |
-| ------------------------ | ----------------------------- |
-| Source datasets          | 5                             |
-| Source types             | 3                             |
-| Medallion layers         | 3                             |
-| Expected booking records | 1,000                         |
-| Booking date range       | 1 January 2025 – 30 June 2025 |
-| Airlines                 | 10                            |
-| Airports                 | 10                            |
-| Flights                  | 10                            |
-| Passengers               | 10                            |
-| Gold data model          | 4 dimensions and 1 fact table |
+| Metric                   | Value                               |
+| ------------------------ | ----------------------------------- |
+| Logical source datasets  | 5                                   |
+| Source types             | 3                                   |
+| Medallion layers         | 3                                   |
+| Expected booking records | 1,000                               |
+| Booking date range       | 1 January 2025 – 30 June 2025       |
+| Airlines                 | 10                                  |
+| Airports                 | 10                                  |
+| Flights                  | 10                                  |
+| Passengers               | 10                                  |
+| Gold model               | 4 dimension tables and 1 fact table |
 
-*Record counts represent the intended sample dataset and should be updated if the source data changes.*
+*These figures describe the sample dataset used for the project. Actual record counts may vary depending on the data loaded.*
 
 ## Medallion Architecture
 
 ### 1. Bronze Layer — Raw Data Ingestion
 
-The Bronze layer stores ingested source data in its original or minimally processed form.
+The Bronze Layer stores source data ingested from the different source systems.
 
 Key activities:
 
-- Migrates on-premises CSV files into Azure Data Lake Storage Gen2.
-- Ingests airport reference data from a REST API.
-- Copies transactional booking data from Azure SQL Database.
-- Uses reusable, parameterised ADF pipelines to process multiple datasets.
-- Preserves raw data for traceability and potential reprocessing.
+- Migrating on-premises CSV files into Azure Data Lake Storage Gen2.
+- Ingesting airport reference data from a REST API.
+- Extracting booking data from Azure SQL Database.
+- Using reusable and parameterised Azure Data Factory pipelines.
+- Applying dynamic mapping where appropriate.
+- Maintaining a raw data layer for downstream processing.
 
-### 2. Silver Layer — Data Cleansing and Transformation
+### 2. Silver Layer — Data Transformation
 
-The Silver layer prepares source data for downstream analytics.
-
-Key activities:
-
-- Handles null values and inconsistent records.
-- Applies appropriate data types.
-- Standardises column names and data formats.
-- Removes duplicate records where appropriate.
-- Applies business rules and joins related datasets.
-- Stores transformed outputs in Delta Lake format, where configured.
-
-### 3. Gold Layer — Analytics-Ready Data
-
-The Gold layer contains structured datasets designed for reporting and business analysis.
+The Silver Layer transforms and prepares data from the Bronze Layer using Azure Data Factory Mapping Data Flows.
 
 Key activities:
 
-- Builds a star-schema data model.
-- Organises data into dimension and fact tables.
-- Supports revenue and booking analysis.
-- Enables airline and route performance comparisons.
-- Provides datasets for Power BI and other reporting tools.
+- Data cleansing and standardisation.
+- Data type conversion.
+- Column mapping and schema alignment.
+- Duplicate handling.
+- Applying transformation rules.
+- Preparing datasets for downstream modelling and analytics.
+
+This layer demonstrates how Azure Data Factory Mapping Data Flows can be used for transformation without requiring a separate Databricks environment.
+
+### 3. Gold Layer — Data Serving
+
+The Gold Layer is implemented through a separate Azure Data Factory Mapping Data Flow layer focused on preparing business-ready data.
+
+Key activities:
+
+- Preparing dimension and fact datasets.
+- Structuring data for analytical queries.
+- Supporting revenue and booking analysis.
+- Enabling airline and route performance analysis.
+- Preparing data for downstream reporting and analytics.
+
+The Gold Layer represents the data-serving stage of the architecture, separating analytical outputs from raw and intermediate datasets.
 
 ## Data Model
 
 The analytical model consists of four dimension tables and one fact table.
 
-| Table        | Description                                                                                              |
-| ------------ | -------------------------------------------------------------------------------------------------------- |
-| DimAirline   | Airline identifiers, names, and countries                                                                |
-| DimAirport   | Airport identifiers, names, cities, and countries                                                        |
-| DimFlight    | Flight identifiers, flight numbers, departure times, and arrival times                                   |
-| DimPassenger | Passenger identifiers, names, gender, age, and country                                                   |
-| FactBookings | Booking transactions, dimension keys, booking dates, ticket costs, flight durations, and check-in status |
+| Table        | Description                                                                                                                                                 |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DimAirline   | Airline identifiers, names, and countries                                                                                                                   |
+| DimAirport   | Airport identifiers, names, cities, and countries                                                                                                           |
+| DimFlight    | Flight identifiers, flight numbers, departure times, and arrival times                                                                                      |
+| DimPassenger | Passenger identifiers, names, gender, age, and country                                                                                                      |
+| FactBookings | Booking transactions, passenger and flight identifiers, airline and airport identifiers, booking dates, ticket costs, flight durations, and check-in status |
 
-### FactBookings — Key Attributes
+### FactBookings Attributes
 
 - Booking ID
 - Passenger ID
@@ -207,76 +231,84 @@ The analytical model consists of four dimension tables and one fact table.
 - Flight Duration in Minutes
 - Check-in Status
 
-The fact table connects booking transactions to the relevant dimensions, enabling analysis across airlines, airports, passengers, and flights.
+The fact table connects booking transactions to the relevant dimensions, allowing bookings and revenue to be analysed across airlines, passengers, flights, and airport routes.
 
 ## Key Features
 
 ### On-Premises to Azure Migration
 
-- Uses Azure Data Factory to transfer local source files into cloud storage.
-- Uses a self-hosted Integration Runtime when connectivity to an on-premises environment is required.
-- Lands raw data in the Bronze layer.
+- Migrates local CSV files into Azure using Azure Data Factory.
+- Uses a self-hosted Integration Runtime where required for on-premises connectivity.
+- Lands raw source data in the Bronze Layer.
 
-### Dynamic and Parameterised Pipelines
+### Dynamic Azure Data Factory Pipelines
 
-- Uses pipeline parameters and reusable datasets.
-- Supports metadata-driven ingestion patterns.
-- Uses ForEach activities to process multiple datasets.
-- Applies dynamic column mapping where source and target schemas permit.
+- Uses parameterised pipelines and reusable datasets.
+- Supports processing multiple datasets through a common ingestion pattern.
+- Uses dynamic column mapping where applicable.
+- Reduces the need to build a completely separate ingestion pipeline for every dataset.
 
 ### REST API Ingestion
 
-- Retrieves airport reference data from a REST API endpoint.
-- Ingests JSON data into the data lake.
-- Demonstrates integration with non-relational data sources.
+- Integrates airport reference data from a REST API.
+- Retrieves JSON data for ingestion into Azure.
+- Demonstrates integration of API-based and file-based data sources.
+
+### Azure SQL Database Integration
+
+- Uses Azure SQL Database as the source for transactional booking records.
+- Supports initial full loading and subsequent incremental ingestion.
+- Provides booking data for downstream transformation and modelling.
 
 ### Incremental Data Loading
 
-- Performs an initial full load of booking records.
-- Uses a watermark to identify records eligible for subsequent ingestion.
-- Reduces unnecessary source reads and repeated data movement.
-- Supports duplicate prevention through appropriate target-side logic.
+- Performs an initial full load of booking data.
+- Uses watermark logic to identify records eligible for incremental ingestion.
+- Reduces unnecessary repeated data movement.
+- Supports duplicate prevention when combined with appropriate target-side logic.
 
-### Pipeline Orchestration and Notifications
+### Data Transformation Using Mapping Data Flows
 
-- Coordinates ingestion and transformation pipelines through a master pipeline.
-- Uses activity dependencies and conditional execution.
-- Supports scheduled and event-based triggers where configured.
+- Implements the Silver Layer transformation process in Azure Data Factory.
+- Implements a separate Gold Layer Data Flow for data serving.
+- Applies data preparation and transformation logic before analytical consumption.
+- Keeps the transformation workflow within Azure Data Factory.
+
+### Orchestration and Notifications
+
+- Uses Azure Data Factory to coordinate pipeline execution.
+- Configures activity dependencies and pipeline control flow.
 - Integrates Azure Logic Apps for success and failure notifications.
+- Uses triggers to automate execution according to the configured schedule or events.
 
-### Data Transformation and Modelling
+### Git Integration and Development Workflow
 
-- Cleans and standardises source datasets.
-- Applies transformations, joins, and derived columns.
-- Produces Silver and Gold datasets.
-- Structures analytical data using a star schema.
+- Integrates Azure Data Factory with GitHub for source control.
+- Uses feature branches to manage development changes.
+- Uses pull requests to support controlled changes and collaboration.
+- Sets up Azure DevOps as part of the project development and deployment workflow.
 
-### CI/CD and Version Control
+## End-to-End Pipeline Workflow
 
-- Maintains version-controlled pipeline definitions and project scripts.
-- Supports feature branches and pull requests.
-- Separates development changes from deployment to the live environment.
-- Provides a foundation for automated validation and deployment through Azure DevOps.
+The pipeline follows these steps:
 
-## Pipeline Workflow
-
-The end-to-end pipeline follows these steps:
-
-1. **Prepare Source Data:** Create the sample CSV files and configure the booking source in Azure SQL Database.
-2. **Configure Connectivity:** Set up the required linked services and Integration Runtime.
-3. **Ingest On-Premises Files:** Copy airline, flight, and passenger data into the Bronze layer.
-4. **Ingest API Data:** Retrieve airport reference data and store the JSON response in the data lake.
-5. **Load Booking Transactions:** Perform the initial full load from Azure SQL Database.
-6. **Implement Incremental Loading:** Use a watermark to identify new or changed source records according to the implemented logic.
-7. **Transform the Data:** Clean, standardise, deduplicate, and join datasets in the Silver layer.
-8. **Build the Gold Model:** Populate dimension and fact tables and prepare business-ready datasets.
-9. **Orchestrate Execution:** Coordinate pipelines, configure triggers, and integrate success or failure notifications.
-10. **Validate the Outputs:** Check row counts, data quality, relationships, and analytical query results.
-11. **Manage Changes:** Commit changes to version control and use pull requests and deployment workflows.
+1. **Source Preparation:** Prepare airline, flight, and passenger CSV files and configure the booking data in Azure SQL Database.
+2. **Connectivity Configuration:** Configure linked services, datasets, and the required Integration Runtime.
+3. **On-Premises Migration:** Copy source CSV files into the Bronze Layer.
+4. **API Ingestion:** Retrieve airport reference data from the REST API.
+5. **Booking Ingestion:** Load transactional booking records from Azure SQL Database.
+6. **Incremental Processing:** Use watermark logic to identify records for subsequent loads.
+7. **Silver Transformation:** Transform and prepare Bronze data using Azure Data Factory Mapping Data Flows.
+8. **Gold Data Serving:** Use the Gold Data Flow layer to prepare business-ready datasets.
+9. **Orchestration:** Coordinate pipeline execution through Azure Data Factory.
+10. **Notifications:** Integrate Azure Logic Apps for pipeline success and failure notifications.
+11. **Automation:** Configure triggers to automate pipeline execution.
+12. **Version Control:** Manage changes using Git integration, feature branches, and pull requests.
+13. **Validation:** Validate the resulting datasets and run analytical queries against the Gold outputs.
 
 ## Project Structure
 
-The following is a suggested repository structure. Adjust directory names to match the actual contents of your repository.
+The following is a suggested repository structure. Update it to reflect the actual files exported or committed to your repository.
 
 ```
 OnPremAzureDataFactoryProject-Azure-Devops/
@@ -299,8 +331,6 @@ OnPremAzureDataFactoryProject-Azure-Devops/
 │   ├── passengers.csv
 │   └── airports.json
 │
-├── notebooks/
-│
 ├── docs/
 │   └── architecture.png
 │
@@ -312,102 +342,107 @@ OnPremAzureDataFactoryProject-Azure-Devops/
 
 ### Prerequisites
 
-Before running the project, ensure you have:
+The following resources and tools are required to recreate the project:
 
-- An Azure subscription with permission to create and configure the required resources.
+- An Azure subscription.
 - Azure Data Factory.
 - Azure Data Lake Storage Gen2.
 - Azure SQL Database.
-- A self-hosted Integration Runtime and access to a source machine, if migrating from a local environment.
-- Azure Logic Apps, if implementing email notifications.
-- Azure DevOps and/or GitHub for source control.
-- The sample datasets and SQL scripts required by the project.
+- Self-hosted Integration Runtime, if required for on-premises connectivity.
+- Azure Logic Apps, if implementing pipeline notifications.
+- GitHub account.
+- Azure DevOps organisation.
+- Source CSV files, API configuration, and SQL scripts.
 
-Some Azure services incur charges. Review pricing and resource configurations before deployment.
+Some Azure services incur charges. Review the applicable pricing before deploying resources.
 
 ### Step 1 — Clone the Repository
 
-Replace the placeholders with your actual GitHub username and repository name.
+Replace the placeholders with your actual repository URL.
 
 ```
 git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
 cd OnPremAzureDataFactoryProject-Azure-Devops
 ```
 
-### Step 2 — Create Azure Resources
+### Step 2 — Create the Azure Resources
 
-Create and configure the resources required for the pipeline:
+Create and configure the Azure resources required by the pipeline:
 
-- Azure Resource Group
+- Resource Group
 - Azure Data Factory
 - Azure Data Lake Storage Gen2
 - Azure SQL Database
 - Integration Runtime
 - Azure Logic App, if required
 
-Configure the necessary permissions and network connectivity between the services.
+Configure the required access permissions and connectivity between the services.
 
 ### Step 3 — Prepare the Source Data
 
-Place the sample CSV and JSON files in their appropriate source locations.
+Prepare the airline, flight, and passenger CSV files and the airport API source.
 
-If you are using an on-premises source, configure the self-hosted Integration Runtime and verify that Azure Data Factory can access the source files.
+If the CSV files are stored on-premises, configure the self-hosted Integration Runtime and verify connectivity from Azure Data Factory to the source environment.
 
-### Step 4 — Set Up Azure SQL Database
+### Step 4 — Configure Azure SQL Database
 
-Run the SQL scripts in the `sql/` directory to create and populate the booking table.
+Run the relevant SQL scripts to create and populate the booking table.
 
-Validate the source records using:
+Validate the source data using a query such as:
 
 ```
 SELECT COUNT(*) AS total_bookings
 FROM dbo.FactBookings;
 ```
 
-Confirm that the source table contains the expected records before running the pipeline.
+Confirm the table contains the expected records before starting the ingestion pipeline.
 
-### Step 5 — Configure ADF Connectivity
+### Step 5 — Configure Azure Data Factory
 
-Configure the linked services and datasets for:
+Configure the linked services, datasets, pipelines, and Mapping Data Flows required for:
 
-- Source files
-- REST API
-- Azure SQL Database
-- Azure Data Lake Storage Gen2
+- On-premises CSV ingestion.
+- REST API ingestion.
+- Azure SQL Database ingestion.
+- Azure Data Lake Storage Gen2.
+- Silver Layer transformations.
+- Gold Layer data serving.
 
-Use managed identities where supported and appropriate. Store required secrets in Azure Key Vault rather than hardcoding them in pipeline definitions.
+Import the exported ADF JSON definitions if they are included in the repository. Otherwise, recreate the components using the documented configuration.
 
-### Step 6 — Configure and Run the Pipelines
+### Step 6 — Run the Initial Ingestion
 
-Import or recreate the required pipelines, datasets, mapping data flows, and triggers.
+Execute the ingestion pipelines and confirm that the source data is available in the Bronze Layer.
 
-Run the ingestion pipelines and verify that the expected data lands in the Bronze layer.
+Validate the file formats, table schemas, and record counts.
 
-### Step 7 — Run Transformations
+### Step 7 — Run Silver and Gold Data Flows
 
-Execute the transformation pipelines to populate the Silver and Gold layers.
+Execute the Silver Layer Mapping Data Flows to transform the Bronze data.
 
-Validate schema consistency, record counts, data types, duplicate handling, and relationships between the fact and dimension tables.
+Run the Gold Layer Data Flow to prepare the business-ready datasets.
 
-### Step 8 — Validate the Results
+Validate the resulting tables or files before running analytical queries.
 
-Run analytical queries against the appropriate Gold tables or views.
+### Step 8 — Configure Orchestration and Automation
 
-Record actual row counts, pipeline execution times, and business metrics to document the results of your implementation.
+Configure the master pipeline, activity dependencies, triggers, and Logic Apps notifications according to your implementation.
 
-## Incremental Loading
+Test successful runs and failure scenarios to verify that pipeline execution and notifications behave as expected.
 
-The booking ingestion process supports an initial full load followed by incremental loads.
+## Incremental Data Loading
+
+The booking ingestion process supports an initial full load followed by incremental loads using watermark logic.
 
 ### Initial Load
 
-The initial run loads the required historical booking records from Azure SQL Database into the target data lake or processing layer.
+The initial load extracts the required historical booking records from Azure SQL Database and writes them to the target ingestion layer.
 
 ### Incremental Load
 
-A watermark identifies the boundary between previously processed data and records eligible for the next load.
+A watermark tracks the boundary between previously processed data and records eligible for subsequent ingestion.
 
-A typical process is:
+The general process is:
 
 1. Read the last successfully stored watermark.
 2. Retrieve the current upper watermark from the source.
@@ -420,34 +455,33 @@ A typical process is:
 
 - Use a reliable watermark column, such as a monotonically increasing booking ID or a source-maintained modification timestamp.
 - A booking date watermark may miss late-arriving records or changes to existing records.
-- Use consistent boundary conditions to avoid missing records between runs.
+- Apply consistent boundary conditions to prevent missing records between runs.
 - Use a staging and MERGE strategy, or an equivalent idempotent write pattern, when updates and duplicate prevention are required.
-- Ensure failed runs do not advance the watermark prematurely.
-- Test repeated runs to confirm that the pipeline behaves as expected.
+- Avoid advancing the watermark if the ingestion process fails.
+- Test repeated executions to validate incremental loading behaviour.
 
-The exact behaviour depends on the watermark column, extraction query, and target write strategy implemented in Azure Data Factory.
+The precise implementation depends on the watermark column, extraction query, and target write strategy configured in Azure Data Factory.
 
-## Business Metrics
+## Business Metrics and SQL Queries
 
-The Gold layer is designed to support analytical metrics such as:
+The Gold Layer can support business reporting and analytical queries related to ticket revenue, bookings, airline performance, check-in rates, and flight duration.
+
+### Example Metrics
 
 | Metric                  | Description                                                |
 | ----------------------- | ---------------------------------------------------------- |
-| Total Bookings          | Number of booking transactions                             |
+| Total Bookings          | Total number of booking records                            |
 | Total Ticket Revenue    | Sum of ticket costs                                        |
-| Average Ticket Price    | Average ticket cost per booking                            |
+| Average Ticket Price    | Average cost per booking                                   |
 | Check-in Rate           | Percentage of bookings with a successful check-in status   |
 | Average Flight Duration | Average flight duration in minutes                         |
-| Top Airline by Bookings | Airline with the highest number of bookings                |
+| Top Airline             | Airline with the highest number of bookings                |
 | Busiest Route           | Origin-to-destination route with the highest booking count |
-| Monthly Booking Trend   | Monthly booking volume and revenue                         |
-| Pipeline Execution Time | Duration of pipeline runs                                  |
-
-### Example SQL Queries
-
-The following examples assume that `FactBookings` exposes the required booking measures and attributes. Adjust the table names and join logic to match your actual schema.
+| Monthly Booking Trend   | Booking volume and revenue by month                        |
 
 ### 1. Headline Metrics
+
+The following example assumes the required booking attributes are available in `FactBookings`.
 
 ```
 SELECT
@@ -466,7 +500,7 @@ SELECT
 FROM dbo.FactBookings;
 ```
 
-### 2. Bookings and Revenue by Airline
+### 2. Revenue and Bookings by Airline
 
 ```
 SELECT
@@ -508,57 +542,85 @@ ORDER BY total_bookings DESC;
 
 ### Project Results
 
-Populate this table with actual results after running the pipeline and analytical queries.
+Populate this table with actual values after running the pipeline and analytical queries.
 
-| Metric                             | Actual Result  |
-| ---------------------------------- | -------------- |
-| Total Ticket Revenue               | To be measured |
-| Average Ticket Price               | To be measured |
-| Check-in Rate                      | To be measured |
-| Average Flight Duration            | To be measured |
-| Top Airline by Bookings            | To be measured |
-| Busiest Route                      | To be measured |
-| Number of Pipelines and Data Flows | To be verified |
-| End-to-End Pipeline Runtime        | To be measured |
+| Metric                       | Result         |
+| ---------------------------- | -------------- |
+| Total Ticket Revenue         | To be measured |
+| Average Ticket Price         | To be measured |
+| Check-in Rate                | To be measured |
+| Average Flight Duration      | To be measured |
+| Top Airline by Bookings      | To be measured |
+| Busiest Route                | To be measured |
+| Number of Pipelines          | To be verified |
+| Number of Mapping Data Flows | To be verified |
+| End-to-End Pipeline Runtime  | To be measured |
 
-*Do not report estimated results as actual pipeline outcomes.*
+*Actual results should be recorded after validating the pipeline outputs.*
 
-## CI/CD and Version Control
+## Git Integration and CI/CD Workflow
 
-The project uses Git-based version control to support collaboration, change tracking, and controlled deployment.
+Git integration was an important part of the project, supporting source control, development collaboration, and a structured approach to managing Azure Data Factory changes.
 
-### Development Workflow
+### GitHub Integration
 
-1. Develop changes in a feature branch.
-2. Commit and push changes to the configured repository.
-3. Open a pull request for review.
-4. Validate changes before merging into the main branch.
-5. Publish or deploy approved ADF artifacts to the target environment.
-6. Verify the deployed pipelines, datasets, and linked services.
+Azure Data Factory Git integration was used to manage pipeline development and version control.
 
-Azure Data Factory Git integration and Azure DevOps deployment pipelines can be used to implement this workflow.
+The workflow supports:
 
-### Repository Configuration
+- Tracking pipeline and Data Flow changes.
+- Working with feature branches.
+- Committing and reviewing changes.
+- Using pull requests to manage changes.
+- Maintaining a controlled development workflow.
 
-GitHub and Azure DevOps are separate platforms. If both are used, document which repository is the source of truth and how changes are synchronised.
+### Azure DevOps
 
-ADF Git integration, branch policies, and automated release pipelines must be configured explicitly. They are not enabled automatically by storing files in a repository.
+Azure DevOps was incorporated into the project's collaboration and deployment workflow.
 
-## Learning Outcomes
+The intended development process is:
 
-This project demonstrates practical experience with:
+1. Create a feature branch for a new change.
+2. Develop and test the changes in Azure Data Factory.
+3. Commit and push the changes to the configured repository.
+4. Create a pull request for review.
+5. Merge approved changes into the main collaboration branch.
+6. Publish or deploy the approved ADF artifacts to the target environment.
+7. Validate the deployed pipelines and data flows.
 
-- Migrating on-premises data into Azure.
-- Building cloud-based data ingestion pipelines.
-- Connecting to REST APIs and relational databases.
-- Developing reusable and parameterised ADF pipelines.
-- Implementing watermark-based incremental ingestion.
-- Applying data quality, cleansing, and deduplication techniques.
-- Working with the Bronze, Silver, and Gold Medallion Architecture.
-- Designing star-schema analytical models.
-- Orchestrating data workflows and handling pipeline failures.
-- Configuring pipeline scheduling and notifications.
-- Using Git, pull requests, and CI/CD concepts in data engineering.
+### Deployment Considerations
+
+GitHub and Azure DevOps are separate platforms. Where both are used, the repository arrangement and synchronisation process should be documented clearly.
+
+ADF Git integration and pull requests support source control and collaboration, while deployment to a live environment requires the appropriate publishing and deployment configuration.
+
+Automated CI/CD deployments can be added using Azure DevOps pipelines.
+
+## Challenges and Learning Outcomes
+
+This project provided practical experience in building an end-to-end data engineering workflow using Azure services.
+
+### Technical Learning Outcomes
+
+- Migrating data from an on-premises environment into Azure.
+- Integrating file-based, API-based, and relational data sources.
+- Building dynamic and parameterised Azure Data Factory pipelines.
+- Implementing dynamic column mapping.
+- Configuring incremental data loading with watermarks.
+- Using Mapping Data Flows for Silver Layer transformations.
+- Building a separate Data Flow layer for Gold data serving.
+- Implementing Medallion Architecture.
+- Designing fact and dimension tables for analytical workloads.
+- Orchestrating pipeline execution with Azure Data Factory.
+- Integrating Azure Logic Apps and triggers.
+- Managing development changes through Git integration and pull requests.
+- Understanding how ingestion, transformation, orchestration, and data serving work together in an end-to-end pipeline.
+
+### Key Architectural Learning
+
+One of the main decisions in this project was using Azure Data Factory Mapping Data Flows instead of Databricks for the Silver Layer transformation process.
+
+This provided practical experience with Azure Data Factory's native transformation capabilities and demonstrated how data engineering architectures can be designed around different services depending on project requirements.
 
 ## Future Improvements
 
@@ -566,22 +628,22 @@ Potential enhancements include:
 
 - Implement automated data quality checks and validation reports.
 - Add referential integrity checks between fact and dimension tables.
-- Implement robust upserts and late-arriving data handling.
-- Add retry policies and more detailed error logging.
-- Integrate Azure Monitor and Log Analytics for pipeline observability.
+- Improve incremental loading to handle late-arriving and updated records.
+- Add retry policies and detailed error logging.
+- Integrate Azure Monitor and Log Analytics for pipeline monitoring.
 - Automate deployments through Azure DevOps YAML pipelines.
-- Introduce automated tests for transformation logic and SQL models.
-- Connect Power BI to the Gold layer.
-- Document actual execution times, row counts, and cost considerations.
-- Add an architecture diagram and sample pipeline screenshots.
+- Add automated validation for pipeline definitions and transformation outputs.
+- Connect Power BI to the Gold Layer.
+- Document actual row counts, pipeline execution times, and operational metrics.
+- Add architecture diagrams and screenshots of the Azure Data Factory pipelines.
 
 ## Security Considerations
 
-- Never commit passwords, access keys, tokens, connection strings, or other secrets.
+- Never commit passwords, access keys, tokens, or connection strings.
 - Use Azure Key Vault and managed identities where appropriate.
 - Apply least-privilege access to storage, databases, and pipeline resources.
 - Keep environment-specific configuration separate from pipeline logic.
-- Exclude local configuration files and sensitive exports from version control.
+- Exclude sensitive files and credentials from version control.
 
 ## Author
 
@@ -592,6 +654,6 @@ Potential enhancements include:
 
 ---
 
-*This project is intended for learning and demonstration. Update the architecture, implementation details, repository structure, and performance metrics to reflect the resources, pipelines, and results actually deployed in your environment.*
+*This project is intended for learning and demonstration. Architecture details, repository structure, and project metrics should reflect the resources, pipelines, and results actually implemented in your Azure environment.*
 
-Before publishing: Replace the GitHub and author placeholders, verify the directory structure against your actual repository, and update the metrics once you have run your queries. Also, make sure the README describes PySpark and ADF Mapping Data Flows accurately for the implementation you have built.
+Before you publish, replace the author placeholders and make sure the suggested folders match your actual repository. The most important distinction is already reflected throughout: Azure Data Factory Mapping Data Flows handle your Silver and Gold layers, and Azure Data Factory is the central service for your pipeline workflow.
