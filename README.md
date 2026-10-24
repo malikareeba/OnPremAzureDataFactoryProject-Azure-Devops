@@ -1,7 +1,3 @@
-Got it! That clarifies the architecture. Your project was built primarily in Azure Data Factory, including the Silver and Gold transformation layers using ADF Mapping Data Flows, rather than using Databricks as a separate processing platform.
-
-Here’s the final README, combining your project description and LinkedIn updates into one clean, copy-and-paste-ready GitHub Markdown file.
-
 # On-Premises to Azure Data Engineering Project | Azure Data Factory & Azure DevOps
 
 An end-to-end data engineering project that migrates, ingests, transforms, and models airline booking data using Azure Data Factory and Azure cloud services.
@@ -15,6 +11,7 @@ The entire data pipeline is built around **Azure Data Factory**, using Mapping D
 - Project Overview
 - Project Objectives
 - Architecture
+- Project Screenshots
 - Technologies Used
 - Data Sources
 - Medallion Architecture
@@ -114,6 +111,42 @@ The project uses Azure Data Factory as the central orchestration and data integr
 7. **Triggers:** Automates pipeline execution according to the configured trigger conditions.
 8. **Git Integration:** Supports source control, feature branches, pull requests, and deployment workflows.
 
+## Project Screenshots
+
+The screenshots below show the Azure resources, Data Factory pipelines and Mapping Data Flows, storage output, and Logic Apps notification workflow used in this project.
+
+### 1. Pipeline Notification Email
+
+![Email notification showing the pipeline run details](<images/DAY 65.1.jpg>)
+
+### 2. Parent Pipeline Execution
+
+![Azure Data Factory parent pipeline execution and activity status](<images/DAY 65.2.jpg>)
+
+### 3. Logic Apps Email Notification Workflow
+
+![Azure Logic Apps HTTP request trigger and Send email action](<images/day 65.3.jpg>)
+
+### 4. Data Flow Preview
+
+![Azure Data Factory Mapping Data Flow preview showing airport records](<images/day 65.4.jpg>)
+
+### 5. Silver Layer Storage Output
+
+![Silver container in Azure Data Lake Storage with dimension and fact folders](<images/day 65.5.jpg>)
+
+### 6. Azure Project Resources
+
+![Azure resource group resources including Data Factory, SQL, Logic App, and storage](<images/day 65.6.jpg>)
+
+### 7. Data Transformation Flow
+
+![Mapping Data Flow with joins, aggregations, filtering, and sink output](<images/day 65.7.jpg>)
+
+### 8. Silver Layer Mapping Data Flows
+
+![Azure Data Factory transformation flows for airline, flight, passenger, booking, and airport data](<images/day 65.8.jpg>)
+
 ## Technologies Used
 
 | Technology                            | Purpose                                                                    |
@@ -176,6 +209,8 @@ Key activities:
 - Using reusable and parameterised Azure Data Factory pipelines.
 - Applying dynamic mapping where appropriate.
 - Maintaining a raw data layer for downstream processing.
+
+
 
 ### 2. Silver Layer — Data Transformation
 
@@ -622,20 +657,6 @@ One of the main decisions in this project was using Azure Data Factory Mapping D
 
 This provided practical experience with Azure Data Factory's native transformation capabilities and demonstrated how data engineering architectures can be designed around different services depending on project requirements.
 
-## Future Improvements
-
-Potential enhancements include:
-
-- Implement automated data quality checks and validation reports.
-- Add referential integrity checks between fact and dimension tables.
-- Improve incremental loading to handle late-arriving and updated records.
-- Add retry policies and detailed error logging.
-- Integrate Azure Monitor and Log Analytics for pipeline monitoring.
-- Automate deployments through Azure DevOps YAML pipelines.
-- Add automated validation for pipeline definitions and transformation outputs.
-- Connect Power BI to the Gold Layer.
-- Document actual row counts, pipeline execution times, and operational metrics.
-- Add architecture diagrams and screenshots of the Azure Data Factory pipelines.
 
 ## Security Considerations
 
@@ -647,13 +668,5 @@ Potential enhancements include:
 
 ## Author
 
-**Your Name**
-
-- GitHub: [YOUR-GITHUB-USERNAME](https://github.com/YOUR-GITHUB-USERNAME)
-- LinkedIn: [YOUR-LINKEDIN-PROFILE](https://www.linkedin.com/)
-
----
-
-*This project is intended for learning and demonstration. Architecture details, repository structure, and project metrics should reflect the resources, pipelines, and results actually implemented in your Azure environment.*
-
-Before you publish, replace the author placeholders and make sure the suggested folders match your actual repository. The most important distinction is already reflected throughout: Azure Data Factory Mapping Data Flows handle your Silver and Gold layers, and Azure Data Factory is the central service for your pipeline workflow.
+**Areeba Malik**
+- LinkedIn: [LINKEDIN-PROFILE](https://www.linkedin.com/in/areeba-malik234/)
